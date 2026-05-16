@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/atotto/clipboard"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 
 	"github.com/tinkthemaker/locket/vault"
 )
@@ -60,7 +60,7 @@ func Run(v *vault.Vault) error {
 		return []key.Binding{keys.Copy, keys.Reveal}
 	}
 
-	_, err := tea.NewProgram(model{list: l}, tea.WithAltScreen()).Run()
+	_, err := tea.NewProgram(model{list: l}).Run()
 	return err
 }
 
@@ -83,7 +83,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, nil
 
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if m.list.FilterState() == list.Filtering {
 			break
 		}
@@ -115,7 +115,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m model) View() string {
+func (m model) View() tea.View {
 	parts := []string{m.list.View()}
 	if m.reveal {
 		if sel, ok := m.list.SelectedItem().(item); ok {
@@ -123,5 +123,7 @@ func (m model) View() string {
 				revealLabelStyle.Render("value:")+revealStyle.Render(sel.value))
 		}
 	}
-	return lipgloss.JoinVertical(lipgloss.Left, parts...)
+	v := tea.NewView(lipgloss.JoinVertical(lipgloss.Left, parts...))
+	v.AltScreen = true
+	return v
 }
