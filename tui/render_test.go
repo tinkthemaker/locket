@@ -9,6 +9,25 @@ import (
 	"github.com/tinkthemaker/locket/vault"
 )
 
+// Verifies the password input is focused immediately after initialModel
+// (no Tab required) so typing actually reaches it. Without this, the
+// unlock screen would silently swallow keystrokes because textinput.Update
+// short-circuits on !focus.
+func TestPasswordInputFocusedAtStart(t *testing.T) {
+	m, err := initialModel()
+	if err != nil {
+		t.Fatalf("initialModel: %v", err)
+	}
+	if !m.passInput.Focused() {
+		t.Fatal("passInput should be focused at startup but isn't")
+	}
+
+	updated, _ := m.Update(tea.KeyPressMsg{Code: 'h', Text: "h"})
+	if got := updated.(Model).passInput.Value(); got != "h" {
+		t.Fatalf("typing 'h' should land in passInput; got %q", got)
+	}
+}
+
 // Renders each screen at a fixed terminal size so we can eyeball the layout.
 // Run with: go test ./tui/ -run Render -v
 func TestRenderScreens(t *testing.T) {

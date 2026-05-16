@@ -84,6 +84,7 @@ func initialModel() (Model, error) {
 	pass.Prompt = "→ "
 	pass.Placeholder = "master password"
 	pass.SetWidth(40)
+	pass.Focus()
 
 	confirm := textinput.New()
 	confirm.EchoMode = textinput.EchoPassword
@@ -125,7 +126,7 @@ func initialModel() (Model, error) {
 }
 
 func (m Model) Init() tea.Cmd {
-	return tea.Batch(textinput.Blink, m.passInput.Focus())
+	return textinput.Blink
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
