@@ -1,5 +1,9 @@
 # locket
 
+[![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://go.dev)
+[![Charm](https://img.shields.io/badge/Charm-Bubble%20Tea%20v2-ff6b9d)](https://charm.sh)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 Tiny encrypted key vault for developers. One password, one file, one binary.
 
 ```
